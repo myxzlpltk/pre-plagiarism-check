@@ -66,7 +66,7 @@ for font in fonts:
     name = name.split('+')[-1]
 
     # If font is embedded
-    if ext == 'ttf':
+    if ext != 'n/a':
         # Write fonts
         filename = hashlib.md5(name.encode('utf-8')).hexdigest() + '.' + ext  # Generate filename
         f = open('fonts/' + filename, 'wb')  # Open file
@@ -107,19 +107,23 @@ data['fonts'] = hashmap
 # Loop through pages
 for page in pdf:
     page_width, page_height = page.mediabox_size  # Get page width and height
-    result = page.get_text("rawdict")  # read page text as a dictionary
+    result = page.get_text('rawdict')  # read page text as a dictionary
 
     items = []
-    for block in result["blocks"]:  # iterate through the text blocks
-        for line in block["lines"]:  # iterate through the text lines
-            for span in line["spans"]:  # iterate through the text spans
-                for char in span["chars"]:  # iterate through text chars
+    for block in result['blocks']:  # iterate through the text blocks
+        for line in block['lines']:  # iterate through the text lines
+            for span in line['spans']:  # iterate through the text spans
+                for char in span['chars']:  # iterate through text chars
                     if span['font'] in hashmap and char['c'] in hashmap[span['font']]:
                         items.append({
-                            'x0': char['bbox'][0],
-                            'y0': char['bbox'][1],
-                            'x1': char['bbox'][2],
-                            'y1': char['bbox'][3]
+                            'font': span['font'],
+                            'char': char['c'],
+                            'rect': {
+                                'x0': char['bbox'][0],
+                                'y0': char['bbox'][1],
+                                'x1': char['bbox'][2],
+                                'y1': char['bbox'][3]
+                            }
                         })
 
     if len(items) > 0:
