@@ -1,6 +1,6 @@
 import os
 
-os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
+os.environ['KMP_DUPLICATE_LIB_OK'] = 'TRUE'
 
 import easyocr
 import fitz
@@ -13,12 +13,12 @@ import time
 from PIL import Image, ImageChops, ImageOps
 
 # Define mongoDB connection
-mongo = pymongo.MongoClient("mongodb://localhost:27017/")
-db = mongo["skripsi"]
-col = db["documents"]
+mongo = pymongo.MongoClient('mongodb://localhost:27017/')
+db = mongo['skripsi']
+col = db['documents']
 
 # Define system variables
-pattern = r"^Gambar[ ]?\d+[.]?[\d]*"
+pattern = r'^Gambar[ ]?\d+[.]?[\d]*'
 reader = easyocr.Reader(['id', 'en'], gpu=True)
 
 # Global thread local
@@ -47,7 +47,7 @@ def process_image(vector):
 
     # Get image data
     pix = fitz.Pixmap(session, xref)  # Get pixmap from image xref
-    img = Image.frombytes("RGB", (pix.width, pix.height), pix.samples)  # Convert pixmap to PIL image
+    img = Image.frombytes('RGB', (pix.width, pix.height), pix.samples)  # Convert pixmap to PIL image
     image_rect = session[index].get_image_rects(xref)[0]  # Get image rect position
 
     # Search for image caption
@@ -85,12 +85,12 @@ def process_image(vector):
 
         if percentage > 0.25:
             return {
-                "xref": xref,
-                "rect": {
-                    "x0": image_rect.x0,
-                    "y0": image_rect.y0,
-                    "x1": image_rect.x1,
-                    "y1": image_rect.y1
+                'xref': xref,
+                'rect': {
+                    'x0': image_rect.x0,
+                    'y0': image_rect.y0,
+                    'x1': image_rect.x1,
+                    'y1': image_rect.y1
                 },
             }
 
@@ -110,9 +110,9 @@ def process_all_images(filename, vectors):
 def main():
     # Read input
     filename = sys.argv[1]
-    print("Processing file: " + filename)
+    print('Processing file: ' + filename)
     # Delete document if exists
-    col.delete_many({"filename": filename})
+    col.delete_many({'filename': filename})
     try:
         # Start timer
         start = time.time()
@@ -144,5 +144,5 @@ def main():
         print('Error', err)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
