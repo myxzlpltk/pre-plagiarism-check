@@ -5,3 +5,6 @@ fonts/*
 !fonts/.gitkeep
 
 .idea
+.env
+.env.production
+node_modules
