@@ -4,7 +4,9 @@ import time
 
 
 def pub_message():
-    writer.pub('skripsi', time.strftime('%H:%M:%S').encode(), finish_pub)
+    timestamp = time.strftime('%H:%M:%S').encode()
+    print(timestamp, end=' ')
+    writer.pub('skripsi', timestamp, finish_pub)
 
 
 def finish_pub(conn, data):

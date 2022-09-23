@@ -1,6 +1,6 @@
 const nsq = require('nsqjs')
 
-const reader = new nsq.Reader('skripsi', 'pdf', {
+const reader = new nsq.Reader('skripsi', 'pdf2', {
   lookupdHTTPAddresses: '127.0.0.1:4161'
 })
 

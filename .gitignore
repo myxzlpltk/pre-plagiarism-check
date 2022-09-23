@@ -9,3 +9,6 @@ fonts/*
 .env.production
 node_modules
 datasets
+docker
+
+__pycache__
