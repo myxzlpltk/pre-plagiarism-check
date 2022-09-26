@@ -11,8 +11,8 @@ services:
     ports:
       - '9000:9000'
       - '9001:9001'
-    volumes:
-      - ./docker/minio:/data
+#    volumes:
+#      - ./docker/minio:/data
     restart: unless-stopped
   mongodb:
     image: mongo:latest

@@ -1,14 +1,16 @@
-exports/*
-!exports/.gitkeep
+outputs/*
+!outputs/.gitkeep
 
 fonts/*
 !fonts/.gitkeep
 
 .idea
+.vs
 .env
 .env.production
 node_modules
 datasets
 docker
+tmps
 
 __pycache__
