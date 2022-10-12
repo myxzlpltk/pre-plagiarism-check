@@ -12,5 +12,6 @@ node_modules
 datasets
 docker
 tmps
+chars
 
 __pycache__
