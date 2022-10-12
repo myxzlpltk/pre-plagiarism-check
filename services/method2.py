@@ -12,13 +12,13 @@ import time
 from PIL import Image, ImageChops, ImageOps
 
 # Define mongoDB connection
-mongo = pymongo.MongoClient('mongodb://localhost:27017/')
+mongo = pymongo.MongoClient('mongodb://root:root@localhost:27017/?authMechanism=DEFAULT')
 db = mongo['skripsi']
 col = db['method2']
 
 # Define system variables
 pattern = r'^Gambar[ ]?\d+[.]?[\d]*'
-reader = easyocr.Reader(['id', 'en'], gpu=True)
+reader = easyocr.Reader([], gpu=True)
 
 # Read input
 filename = sys.argv[1]

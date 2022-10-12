@@ -2,7 +2,6 @@ import os
 import pymongo
 import random
 import string
-import uuid
 from copy import deepcopy
 from fontTools import ttLib
 from tqdm import tqdm
@@ -14,10 +13,11 @@ font_input_path = '../inputs/times.ttf'
 total = int(input("Enter the total number of fonts: "))
 
 # Database connection
-print("Init MongoDB connection...")
-mongo = pymongo.MongoClient('mongodb://localhost:27017/')
+print("MongoDB connection", end=' ')
+mongo = pymongo.MongoClient('mongodb://root:root@localhost:27017/?authMechanism=DEFAULT')
 db = mongo['skripsi']
-col = db['generator']
+col = db['fonts']
+print("Connected")
 
 for i in tqdm(range(total)):
     # Generate random mapping
@@ -26,7 +26,7 @@ for i in tqdm(range(total)):
     random.shuffle(lowercase_letters)  # Shuffle lowercase letters
     random.shuffle(uppercase_letters)  # Shuffle uppercase letters
 
-    total_swaps = random.randint(10, 20)  # Random number of swaps
+    total_swaps = random.randint(5, 15)  # Random number of swaps
     random_lowercase_letters = lowercase_letters[:total_swaps]  # Random lowercase letters
     random_uppercase_letters = uppercase_letters[:total_swaps]  # Random uppercase letters
     lowercase_letters = lowercase_letters[:total_swaps]  # Pair lowercase letters
@@ -37,9 +37,10 @@ for i in tqdm(range(total)):
 
     # Create mapping
     swaps = dict(zip(lowercase_letters + uppercase_letters, random_lowercase_letters + random_uppercase_letters))
+    swaps = {k: v for k, v in swaps.items() if k != v}
 
     # Generate random font name
-    font_output_filename = str(uuid.uuid4().hex) + '.ttf'
+    font_output_filename = str(i) + '.ttf'
     font_output_path = '../tmps/' + font_output_filename
 
     font = ttLib.TTFont(font_input_path)
@@ -52,11 +53,11 @@ for i in tqdm(range(total)):
     font.save(font_output_path)
 
     # Rename font
-    os.system(f"python rename_fonts.py \"{font_output_path}\" -s \" Fake\" --inplace")
+    os.system(f"python rename_fonts.py \"{font_output_path}\" -s \" Fake {i}\" --inplace")
 
     # Save to database
     col.insert_one({
         'swaps': swaps,
         'font': font_output_filename,
-        'fontname': 'Times New Roman Fake',
+        'fontname': f'Times New Roman Fake {i}',
     })

@@ -32,7 +32,7 @@ def draw_char(s, typeface, size):
 
 
 # Define mongoDB connection
-mongo = pymongo.MongoClient('mongodb://localhost:27017/')
+mongo = pymongo.MongoClient('mongodb://root:root@localhost:27017/?authMechanism=DEFAULT')
 db = mongo['skripsi']
 col = db['method5']
 
@@ -41,7 +41,7 @@ reader = easyocr.Reader(['id', 'en'], gpu=True)  # OCR tool
 chars = list(string.ascii_letters)  # Get list possible character
 
 # Read input
-filename = sys.argv[1]
+filename = str(input("filename: "))
 # Delete document if exists
 col.delete_many({'filename': filename})
 # Start timer
@@ -111,6 +111,9 @@ for page in pdf:
 
     items = []
     for block in result['blocks']:  # iterate through the text blocks
+        if 'lines' not in block.keys():
+            continue
+
         for line in block['lines']:  # iterate through the text lines
             for span in line['spans']:  # iterate through the text spans
                 for char in span['chars']:  # iterate through text chars

@@ -1,42 +1,26 @@
 version: '3'
 services:
   minio:
-    container_name: Minio
+    container_name: minio
+    image: quay.io/minio/minio
+    ports:
+      - "9001:9001"
+      - "9000:9000"
+    environment:
+      - MINIO_ROOT_USER=${MINIO_ACCESS_KEY_ID}
+      - MINIO_ROOT_PASSWORD=${MINIO_SECRET_ACCESS_KEY}
     command: server /data --console-address ":9001"
-    env_file: .env.development
-    environment:
-      - MINIO_ROOT_USER=admin
-      - MINIO_ROOT_PASSWORD=supersecret
-    image: quay.io/minio/minio:latest
-    ports:
-      - '9000:9000'
-      - '9001:9001'
-#    volumes:
-#      - ./docker/minio:/data
-    restart: unless-stopped
-  mongodb:
-    image: mongo:latest
-    container_name: mongodb
-    env_file: .env.development
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD}
-      MONGO_INITDB_DATABASE: ${MONGODB_DATABASE}
-    ports:
-      - "27017:27017"
-    volumes:
-      - ./configs/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
   nsqlookupd:
     image: nsqio/nsq
     container_name: nsqlookupd
     command: /nsqlookupd
     ports:
-      - "4160"
+      - "4160:4160"
       - "4161:4161"
   nsqd:
     image: nsqio/nsq
     container_name: nsqd
-    command: /nsqd --broadcast-address=127.0.0.1 --lookupd-tcp-address=nsqlookupd:4160
+    command: /nsqd --broadcast-address=nsqd --lookupd-tcp-address=nsqlookupd:4160
     depends_on:
       - nsqlookupd
     ports:
@@ -50,3 +34,24 @@ services:
       - nsqlookupd
     ports:
       - "4171:4171"
+  redis:
+    image: redis:7.0.5-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGODB_DATABASE}
+    ports:
+      - "27017:27017"
+    restart: unless-stopped
+    volumes:
+      - mongodbdata:/data/db
+      - mongodbconfig:/data/configdb
+volumes:
+  mongodbdata:
+  mongodbconfig:
