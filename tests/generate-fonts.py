@@ -19,25 +19,29 @@ db = mongo['skripsi']
 col = db['fonts']
 print("Connected")
 
+font_keys = dict(zip(
+    list(string.digits + string.ascii_lowercase + string.ascii_uppercase),
+    ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
+))
+
 for i in tqdm(range(total)):
-    # Generate random mapping
-    lowercase_letters = list(string.ascii_lowercase)
-    uppercase_letters = list(string.ascii_uppercase)
-    random.shuffle(lowercase_letters)  # Shuffle lowercase letters
-    random.shuffle(uppercase_letters)  # Shuffle uppercase letters
+    while True:
+        # Generate random mapping
+        letters = list(string.digits + string.ascii_lowercase + string.ascii_uppercase)
+        random.shuffle(letters)  # Shuffle letters
 
-    total_swaps = random.randint(5, 15)  # Random number of swaps
-    random_lowercase_letters = lowercase_letters[:total_swaps]  # Random lowercase letters
-    random_uppercase_letters = uppercase_letters[:total_swaps]  # Random uppercase letters
-    lowercase_letters = lowercase_letters[:total_swaps]  # Pair lowercase letters
-    uppercase_letters = uppercase_letters[:total_swaps]  # Pair uppercase letters
+        total_swaps = random.randint(5, 30)  # Random number of swaps
+        random_letters = letters[:total_swaps]  # Pick letters
+        letters = letters[:total_swaps]  # Pick letters
 
-    random.shuffle(random_lowercase_letters)  # Shuffle random lowercase letters
-    random.shuffle(random_uppercase_letters)  # Shuffle random uppercase letters
+        random.shuffle(letters)  # Shuffle random letters
 
-    # Create mapping
-    swaps = dict(zip(lowercase_letters + uppercase_letters, random_lowercase_letters + random_uppercase_letters))
-    swaps = {k: v for k, v in swaps.items() if k != v}
+        # Create mapping
+        swaps = dict(zip(letters, random_letters))
+        swaps = {k: v for k, v in swaps.items() if k.lower() != v.lower()}
+
+        if len(swaps) > 0:
+            break
 
     # Generate random font name
     font_output_filename = str(i) + '.ttf'
@@ -47,8 +51,8 @@ for i in tqdm(range(total)):
     original_font = deepcopy(font)
 
     for key, value in swaps.items():
-        font['glyf'][key] = original_font['glyf'][value]  # Swap glyph
-        font['hmtx'].metrics[key] = original_font['hmtx'].metrics[value]  # Swap metric
+        font['glyf'][font_keys[key]] = original_font['glyf'][font_keys[value]]  # Swap glyph
+        font['hmtx'].metrics[font_keys[key]] = original_font['hmtx'].metrics[font_keys[value]]  # Swap metric
 
     font.save(font_output_path)
 
