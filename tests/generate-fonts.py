@@ -14,8 +14,8 @@ total = int(input("Enter the total number of fonts: "))
 
 # Database connection
 print("MongoDB connection", end=' ')
-mongo = pymongo.MongoClient('mongodb://root:root@localhost:27017/?authMechanism=DEFAULT')
-db = mongo['skripsi']
+mongo = pymongo.MongoClient('mongodb+srv://myxzlpltk:fJqPVlWLQxfZpFRz@cluster0.stwjzjx.mongodb.net')
+db = mongo['skripsi2']
 col = db['fonts']
 print("Connected")
 
@@ -38,9 +38,10 @@ for i in tqdm(range(total)):
 
         # Create mapping
         swaps = dict(zip(letters, random_letters))
-        swaps = {k: v for k, v in swaps.items() if k.lower() != v.lower()}
+        # swaps = {k: v for k, v in swaps.items() if k.lower() != v.lower()}
 
-        if len(swaps) > 0:
+        # Check if there is no element that is mapped to itself
+        if len([k for k, v in swaps.items() if k.lower() == v.lower()]) == 0:
             break
 
     # Generate random font name

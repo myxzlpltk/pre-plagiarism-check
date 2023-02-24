@@ -44,8 +44,8 @@ def draw_char(s, typeface, size):
 
 # Define mongoDB connection
 print("Initialize MongoDB", end=' ')
-mongo = pymongo.MongoClient('mongodb://root:root@localhost:27017/?authMechanism=DEFAULT')
-db = mongo['skripsi']
+mongo = pymongo.MongoClient('mongodb+srv://myxzlpltk:fJqPVlWLQxfZpFRz@cluster0.stwjzjx.mongodb.net')
+db = mongo['skripsi2']
 fonts = db['fonts']
 documents = db['documents']
 print("SUCCESS")

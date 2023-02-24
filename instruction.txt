@@ -1,0 +1,22 @@
+1. Start Docker
+
+2. Services
+E:
+cd E:\Projects\Skripsi\Pra Plagiarism Check\services
+conda activate skripsi
+python method5.py
+
+2. Frontend
+E:
+cd E:\Projects\Skripsi\frontend-pre-plagiarism
+yarn start
+
+3. Backend
+E:
+cd E:\Projects\Skripsi\backend-pre-plagiarism
+yarn start
+
+
+/// Reset DB
+db.getSiblingDB('skripsi').getCollection('documents').deleteMany({})
+db.getCollection('users').updateMany({},{$set:{idle:true, jobCreatedAt: null}})

@@ -1,0 +1,39 @@
+name: skripsi
+channels:
+  - conda-forge
+  - pytorch
+  - anaconda
+  - defaults
+dependencies:
+  # Python
+  - python=3.10
+  # DataSpell
+  - jupyter
+  - notebook
+  # Analysis
+  - pandas
+  - scikit-learn
+  - scikit-image
+  - matplotlib
+  - numpy
+  - tqdm
+  - lime
+  # GPU
+  - cudatoolkit=11.6
+  - cudnn
+  # PyTorch
+  - pytorch
+  - torchvision
+  - torchaudio
+  # Tools
+  - fonttools
+  - pillow
+  - opencv
+  - pymongo
+  - bson
+  # Pip install
+  - pip
+  - pip:
+      - easyocr
+      - PyMuPDF
+      - tensorflow-gpu

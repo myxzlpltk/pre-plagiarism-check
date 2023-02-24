@@ -13,5 +13,6 @@ datasets
 docker
 tmps
 chars
+logs
 
 __pycache__
